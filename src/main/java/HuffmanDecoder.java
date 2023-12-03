@@ -1,14 +1,17 @@
 import java.util.Map;
 
-public class Decompressor {
+public class HuffmanDecoder {
     public static void main(String[] args) {
-        //read the inputs
-        Map<Integer, String> huffmanCodes = FileHandler.readHuffmanFromFile("dec_tab-mada.txt");
-        byte[] byteArray = FileHandler.readByteArrayFromFile("output-mada.dat");
+        //huffmanCodes und output.dat einlesen
+        Map<Integer, String> huffmanCodes = FileHandler.readHuffmanFromFile("dec_tab.txt");
+        byte[] byteArray = FileHandler.readByteArrayFromFile("output.dat");
 
+        //zurückwandeln gemäss Schritte im Encoder
         String encodedBitString = convertByteArrayToBitString(byteArray);
         String trimmedAndReversedBitString = decodeAndReverse(encodedBitString);
         String decodedText = decodeToASCII(trimmedAndReversedBitString, huffmanCodes);
+
+        //decodedText ausgeben
         FileHandler.writeDecodedTextToFile(decodedText);
     }
 
@@ -38,7 +41,7 @@ public class Decompressor {
 
             // Check if the current code is a valid Huffman code
             for (Map.Entry<Integer, String> entry : huffmanCodes.entrySet()) {
-                if (entry.getValue().equals(currentCode.toString())) {
+                if (entry.getValue().contentEquals(currentCode)) {
                     decodedText.append((char) entry.getKey().intValue());
                     currentCode.setLength(0); // Clear the current code
                     break;

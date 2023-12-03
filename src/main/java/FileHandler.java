@@ -25,21 +25,10 @@ public class FileHandler {
             throw new RuntimeException(
                 "couldn't find " + fileName + " in /resources folder or file not in valid format");
         }
-//        if (!isAscii(input)) {
-//            throw new RuntimeException(fileName + " contains non-ASCII characters");
-//        }
 
         return map;
     }
 
-//    public static boolean isAscii(String input) {
-//        for (int i = 0; i < input.length(); i++) {
-//            if (input.charAt(i) > 127) {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
 
     static void writeHuffmanToFile(String fileName, Map<Integer, String> huffmanCodes) {
         StringBuilder output = new StringBuilder();

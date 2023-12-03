@@ -1,7 +1,4 @@
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -9,12 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-public class HuffmanGenerator {
+public class HuffmanEncoder {
 
     public static void main(String[] args) {
-        Map<Integer, Integer> frequencyTable = FileHandler.readTextFileToFrequencyTable("hallo-ipt");
+        //input einlesen in frequencyTable
+        Map<Integer, Integer> frequencyTable = FileHandler.readTextFileToFrequencyTable("input.txt");
         PriorityQueue<HuffmanNode> priorityQueue = new PriorityQueue<>();
-        System.out.println(frequencyTable);
 
         //Blätter erzeugen
         for (Map.Entry<Integer, Integer> entry : frequencyTable.entrySet()) {
@@ -34,7 +31,7 @@ public class HuffmanGenerator {
             priorityQueue.add(merged);
         }
 
-        //Huffman Code implementieren
+        //Huffman Codes implementieren
         HuffmanNode root = priorityQueue.poll();
         Map<Integer, String> huffmanCodes = new HashMap<>();
         generateCodes(root, "", huffmanCodes);
@@ -42,16 +39,16 @@ public class HuffmanGenerator {
         //write codes to file
         FileHandler.writeHuffmanToFile("dec_tab.txt", huffmanCodes);
 
-        //encode to Bitstring
-        String encodedBitString = encodeFile("hallo-ipt", huffmanCodes);
+        //encode to BitString
+        String encodedBitString = encodeFile("input.txt", huffmanCodes);
 
-        // Schritt 6: Bitstring erweitern
+        //BitString erweitern für Byte-Array
         encodedBitString += "1";  // Fügen Sie eine 1 hinzu
         while (encodedBitString.length() % 8 != 0) {
             encodedBitString += "0";  // Fügen Sie Nullen hinzu, bis die Länge ein Vielfaches von 8 ist
         }
 
-        // Schritt 7: Byte-Array erstellen und in externer Datei speichern
+        //Byte-Array erstellen und in externer Datei speichern
         byte[] byteArray = convertBitStringToByteArray(encodedBitString);
         saveByteArrayToFile(byteArray, "output.dat");
     }
