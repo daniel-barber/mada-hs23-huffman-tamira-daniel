@@ -1,4 +1,8 @@
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,11 +23,11 @@ public class HuffmanGenerator {
         }
 
         //Baum erstellen
-        while (priorityQueue.size()>1){
+        while (priorityQueue.size() > 1) {
             HuffmanNode left = priorityQueue.poll();
             HuffmanNode right = priorityQueue.poll();
 
-            HuffmanNode merged = new HuffmanNode(-1, left.frequency+ right.frequency);
+            HuffmanNode merged = new HuffmanNode(-1, left.frequency + right.frequency);
             merged.left = left;
             merged.right = right;
 
@@ -32,7 +36,7 @@ public class HuffmanGenerator {
 
         //Huffman Code implementieren
         HuffmanNode root = priorityQueue.poll();
-        Map<Integer,String> huffmanCodes = new HashMap<>();
+        Map<Integer, String> huffmanCodes = new HashMap<>();
         generateCodes(root, "", huffmanCodes);
 
         //write codes to file
@@ -47,7 +51,11 @@ public class HuffmanGenerator {
             encodedBitString += "0";  // Fügen Sie Nullen hinzu, bis die Länge ein Vielfaches von 8 ist
         }
 
+        // Schritt 7: Byte-Array erstellen und in externer Datei speichern
+        byte[] byteArray = convertBitStringToByteArray(encodedBitString);
+        saveByteArrayToFile(byteArray, "output.dat");
     }
+
 
     private static String encodeFile(String fileName, Map<Integer, String> huffmanCodes) {
         StringBuilder encodedBitString = new StringBuilder();
@@ -68,13 +76,34 @@ public class HuffmanGenerator {
     }
 
 
-
     private static void generateCodes(HuffmanNode node, String code, Map<Integer, String> huffmanCodes) {
-        if(node.character != -1){
+        if (node.character != -1) {
             huffmanCodes.put(node.character, code);
             return;
         }
         generateCodes(node.left, code + "0", huffmanCodes);
         generateCodes(node.right, code + "1", huffmanCodes);
     }
+
+    private static byte[] convertBitStringToByteArray(String bitString) {
+        int length = bitString.length();
+        byte[] byteArray = new byte[length / 8];
+
+        for (int i = 0; i < length; i += 8) {
+            String byteStr = bitString.substring(i, i + 8);
+            byteArray[i / 8] = (byte) Integer.parseInt(byteStr, 2);
+        }
+
+        return byteArray;
+    }
+
+    private static void saveByteArrayToFile(byte[] out, String fileName) {
+        try (FileOutputStream fos = new FileOutputStream("target/" + fileName)) {
+            fos.write(out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

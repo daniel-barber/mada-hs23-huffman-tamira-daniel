@@ -1,4 +1,6 @@
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -78,5 +80,22 @@ public class FileHandler {
         return huffmanCodes;
     }
 
+    public static byte[] readByteArrayFromFile(String fileName) {
+        try (FileInputStream fis = new FileInputStream("src/main/resources/" + fileName)) {
+            File file = new File("src/main/resources/" + fileName);
+            byte[] bFile = new byte[(int) file.length()];
+            fis.read(bFile);
+            return bFile;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public static void writeDecodedTextToFile(String decodedText) {
+        try (FileWriter fileWriter = new FileWriter("target/decompress.txt")) {
+            fileWriter.write(decodedText);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
