@@ -1,7 +1,4 @@
-package src.main.java;
-
 import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,7 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class FileHandler {
-    static Map<Integer, Integer> readTextFile(String fileName) {
+    static Map<Integer, Integer> readTextFileToFrequencyTable(String fileName) {
         var map = new TreeMap<Integer, Integer>();
         int currentChar;
         try (BufferedReader textReader = new BufferedReader(new java.io.FileReader("src/main/resources/" + fileName))) {

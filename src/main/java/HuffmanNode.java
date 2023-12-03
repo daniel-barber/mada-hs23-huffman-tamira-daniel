@@ -1,5 +1,3 @@
-package src.main.java;
-
 public class HuffmanNode implements Comparable<HuffmanNode> {
     int character;
     int frequency;

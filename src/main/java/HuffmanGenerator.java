@@ -1,13 +1,14 @@
-package src.main.java;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-public class Huffman {
+public class HuffmanGenerator {
 
     public static void main(String[] args) {
-        Map<Integer, Integer> frequencyTable = FileHandler.readTextFile("hallo-ipt");
+        Map<Integer, Integer> frequencyTable = FileHandler.readTextFileToFrequencyTable("hallo-ipt");
         PriorityQueue<HuffmanNode> priorityQueue = new PriorityQueue<>();
         System.out.println(frequencyTable);
 
@@ -37,7 +38,36 @@ public class Huffman {
         //write codes to file
         FileHandler.writeHuffmanToFile("dec_tab.txt", huffmanCodes);
 
+        //encode to Bitstring
+        String encodedBitString = encodeFile("hallo-ipt", huffmanCodes);
+
+        // Schritt 6: Bitstring erweitern
+        encodedBitString += "1";  // Fügen Sie eine 1 hinzu
+        while (encodedBitString.length() % 8 != 0) {
+            encodedBitString += "0";  // Fügen Sie Nullen hinzu, bis die Länge ein Vielfaches von 8 ist
+        }
+
     }
+
+    private static String encodeFile(String fileName, Map<Integer, String> huffmanCodes) {
+        StringBuilder encodedBitString = new StringBuilder();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/" + fileName))) {
+            int c;
+            while ((c = reader.read()) != -1) {
+                String huffmanCode = huffmanCodes.get(c);
+                if (huffmanCode != null) {
+                    encodedBitString.append(huffmanCode);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return encodedBitString.toString();
+    }
+
+
 
     private static void generateCodes(HuffmanNode node, String code, Map<Integer, String> huffmanCodes) {
         if(node.character != -1){
