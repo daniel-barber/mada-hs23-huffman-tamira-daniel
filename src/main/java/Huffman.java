@@ -1,15 +1,13 @@
 package src.main.java;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.TreeMap;
 
 public class Huffman {
 
     public static void main(String[] args) {
-        Map<Integer, Integer> frequencyTable = FileReader.readTextFile("hallo-ipt");
+        Map<Integer, Integer> frequencyTable = FileHandler.readTextFile("hallo-ipt");
         PriorityQueue<HuffmanNode> priorityQueue = new PriorityQueue<>();
         System.out.println(frequencyTable);
 
@@ -36,6 +34,8 @@ public class Huffman {
         Map<Integer,String> huffmanCodes = new HashMap<>();
         generateCodes(root, "", huffmanCodes);
 
+        //write codes to file
+        FileHandler.writeHuffmanToFile("dec_tab.txt", huffmanCodes);
 
     }
 
